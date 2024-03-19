@@ -1,0 +1,189 @@
+<!-- chart.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Table</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/css_login.css' %}">
+
+</head>
+<body>
+
+    <div class="table-container">
+        <div class="table-wrapper">
+            <h3 class = "title">Account</h3>
+            <table border="1" id="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Password</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Initial data loaded from Django context -->
+                    <tr>
+                        <td>{{ item.username }}</td>
+                        <td>{{ item.upassword }}</td>
+                        <td>{{ item.utype }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">No items found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="table-wrapper">
+            <h3 class = "title">Exam Room Doing List</h3>
+            <table border="1"  id="exam-room-doing-table">
+                <thead>
+                    <tr>
+                        <th>ERD ID</th>
+                        <th>Username</th>
+                        <th>Exam ID</th>
+                        <th>State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ erd.erd_id }}</td>
+                        <td>{{ erd.username }}</td>
+                        <td>{{ erd.exam_id }}</td>
+                        <td>{{ erd.state }}</td>
+                        
+                    </tr>
+                    <tr>
+                        <td colspan="4">No data available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- History -->
+        <div class="table-wrapper">
+            <h3 class = "title">History</h3>
+            <table border="1"  id="history-management-table">
+                <thead>
+                    <tr>
+                        <th>History id</th>
+                        <th>Exam Room</th>
+                        <th>Time</th>
+                        <th>Label</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ item.his_id }}</td>
+                        <td>{{ item.erd_id }}</td>
+                        <td>{{ item.htime }}</td>
+                        <td>{{ item.labels }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">No data available</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script>
+    function fetchData() {
+        $.ajax({
+            url: 'get_user_data',  // Update this URL to your Django view
+            method: 'GET',
+            success: function(response) {
+                var tableBody = $('#data-table tbody');
+                tableBody.empty();  // Clear existing data
+                response.data.forEach(function(item) {
+                    // Check if the password is '123', and set the color accordingly
+                    var passwordColor = item.upassword === '123' ? 'style="color:red;"' : '';
+
+                    tableBody.append(
+                        `<tr>
+                            <td>${item.username}</td>
+                            <td ${passwordColor}>${item.upassword}</td>
+                            <td>${item.utype}</td>
+                        </tr>`
+                    );
+                });
+                if (response.data.length === 0) {
+                    tableBody.append('<tr><td colspan="12">No data found</td></tr>');
+                 }
+            }
+        });
+    }
+        $(document).ready(function() {
+            fetchData();
+            setInterval(fetchData, 5000); // Fetch data every 10 seconds
+        });
+    
+
+    // Exam Room Doing
+    function fetchExamRoomDoingData() {
+        $.ajax({
+            url: 'get_exam_room_doing_list',  // Update this URL to your Django view
+            method: 'GET',
+            success: function(response) {
+                var tableBody = $('#exam-room-doing-table tbody');
+                tableBody.empty();  // Clear existing data
+                response.data.forEach(function(erd) {
+                    tableBody.append(
+                        `<tr>
+                            <td>${erd.erd_id}</td>
+                            <td>${erd.username}</td>
+                            <td>${erd.exam_id}</td>
+                            <td>${erd.state}</td>
+                        </tr>`
+                    );
+                });
+                if (response.data.length === 0) {
+                    tableBody.append('<tr><td colspan="12">No data found</td></tr>');
+                 }
+            }
+        });
+    }
+
+        $(document).ready(function() {
+            fetchExamRoomDoingData();
+            setInterval(fetchExamRoomDoingData, 5000); // Fetch data every 5 seconds
+        });
+
+    // History
+    function fetchHistoryData() {
+        $.ajax({
+            url: 'history_exam_join_view',  // Update this URL to your Django view
+            method: 'GET',
+            success: function(response) {
+                var tableBody = $('#history-management-table tbody');
+                tableBody.empty();  // Clear existing data
+                response.data.forEach(function(item) {
+                    var labelColor = item.labels === 'abnormal' ? 'style="color:red;"' : '';
+                    tableBody.append(
+                        `<tr>
+                            <td>${item.his_id}</td>
+                            <td>${item.erd_id}</td>
+                            <td>${item.htime}</td>
+                            <td ${labelColor}>${item.labels}</td>
+                        </tr>`
+                    );
+                });
+                if (response.data.length === 0) {
+                    tableBody.append('<tr><td colspan="12">No data found</td></tr>');
+                 }
+            }
+        });
+    }
+
+        $(document).ready(function() {
+            fetchHistoryData();
+            setInterval(fetchHistoryData, 5000); // Fetch data every 5 seconds
+        });
+    </script>
+    
+    
+
+
+</body>
+</html>

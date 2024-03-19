@@ -1,0 +1,31 @@
+{
+    "exam": [
+        {
+            "question": "What is the capital of France?",
+            "answers": [
+                "Paris",
+                "London",
+                "Berlin",
+                "Rome"
+            ]
+        },
+        {
+            "question": "Who wrote 'To Kill a Mockingbird'?",
+            "answers": [
+                "Harper Lee",
+                "J.K. Rowling",
+                "Stephen King",
+                "Ernest Hemingway"
+            ]
+        },
+        {
+            "question": "What is the powerhouse of the cell?",
+            "answers": [
+                "Mitochondria",
+                "Nucleus",
+                "Ribosome",
+                "Lysosome"
+            ]
+        }
+    ]
+}

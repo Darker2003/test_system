@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exam Rooms</title>
+    <!-- Add necessary CSS and JS links -->
+</head>
+<body>
+    <h1>Exam Rooms</h1>
+    <table>
+        <tr>
+            <th>Exam Room ID</th>
+            <th>Username</th>
+            <th>Exam ID</th>
+            <th>State</th>
+        </tr>
+        {% for room in exam_rooms %}
+            <tr>
+                <td>{{ room.erd_id }}</td>
+                <td>{{ room.username }}</td> <!-- Displays the associated username -->
+                <td>{{ room.exam_id }}</td> <!-- Displays the associated exam ID -->
+                <td>{{ room.get_state_display }}</td> <!-- Displays the human-readable choice -->
+            </tr>
+        {% empty %}
+            <tr><td colspan="4">No exam rooms found.</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

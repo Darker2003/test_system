@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Nunito' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/exammenu.css' %}" />
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="https://www.contexteditor.org/wp-content/uploads/2021/11/logo.gif" alt="Company Logo" width="30px" height="30px" />
+            <span class="logo-name"><b>Anti-Cheat Exam Room</b></span>
+        </div>
+        <nav>
+            <a href="{% url 'home' %}">Home</a> | 
+
+            {% if request.session.user_name == supervisor_name %}
+                <a href="/joined?exam_id={{ exam_id }}">Dashboard</a>
+            {% endif %}
+
+        </nav>
+    </header>
+
+    <div class="dashboard-container">
+        <h1>Welcome {{request.session.user_name}}!</h1>
+
+        <!-- Exam Sections -->
+        <div class="exam-section">
+            <div class="exam-card">
+                <!-- Exam details go here (e.g., subject name, ID) -->
+                <ul>
+                    <li>Couse name: {{exam_id}}</li>
+                </ul>
+
+                <!-- Exam schedule and details -->
+                <hr>
+                <ul>
+                    <li class="{% if status == 'overdue' %}status-overdue{% else %}status-ok{% endif %}">Status: {{ status }}</li>
+                    <li> <img src="https://www.contexteditor.org/wp-content/uploads/2021/11/logo.gif" alt="Your Image 3" width="20px" height="20px" />
+                        {{exam_date}} </li>
+                    <li>Duration: {{duration}} Minutes</li>
+                    <li>Supervisor: {{supervisor_name}} </li>
+
+                    <li>{{number_question}} Questions</li>
+                </ul>
+
+                <!-- Start Exam button -->
+                <div class="start-exam-button">
+                    <!-- <button type="button">Start Exam -->
+                        <a href = "{% url 'exam_room' exam_id=exam_id %}">Start Exam</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

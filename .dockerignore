@@ -1,0 +1,12 @@
+test.ipynb
+db.sqlite3
+Web
+venv
+dashmin-1.0.0
+Abnormal_behavior/__pycache__
+Abnormal_behavior/migrations/__pycache__
+Abnormal_behavior/management/commands/__pycache__
+Fsoft/__pycache__
+Abnormal_behavior/views/__pycache__
+DigiCertGlobalRootCA.crt.pem
+alphabet.pem

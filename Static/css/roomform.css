@@ -1,0 +1,42 @@
+/* Custom CSS for form background color */
+.your-custom-create-form,
+.your-custom-access-form {
+    background-color: #06a3da;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Adjust other Bootstrap styles as needed */
+.modal-header,
+.modal-title,
+.modal-footer {
+    background-color: #06a3da;
+    color: #fff;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #005b8b;
+}
+
+/* Center the modal content */
+.modal-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* 100% of the viewport height */
+}
+
+.modal-content {
+    background-color: transparent;
+    border: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; /* Stack form elements vertically */
+}
+
+/* Center-align horizontally */
+.text-center {
+    text-align: center;
+}

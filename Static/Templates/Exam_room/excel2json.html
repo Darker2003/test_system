@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+        crossorigin="anonymous">
+    <title>Submit exam question form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <input type="hidden" id="csrf_token" value="{% csrf_token %}">
+    <div class="conatiner mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                <h3>Upload your exam question file</h3>
+                    <div id="exam_id">{{ exam_id }}</div>
+                    <div id="course_id">{{ course_id }}</div>
+            </div>
+            <div class="col-md-3">
+                <input class="form-control" type="file" id="input" accept=".xls,.xlsx">
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" id="button">Submit</button>
+            </div>
+            <div class="col-md-12">
+                <h3 id="jsondata"></h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let step = 4; //step to get the options of the question (1 question has 4 options)
+        let selectedFile;
+        document.getElementById('input').addEventListener("change", (event) => {
+            selectedFile = event.target.files[0];
+        });
+
+        document.getElementById('button').addEventListener("click", () => {
+            if (selectedFile) {
+                let fileReader = new FileReader();
+                fileReader.readAsBinaryString(selectedFile);
+                fileReader.onload = (event) => {
+                    let data = event.target.result;
+                    let workbook = XLSX.read(data, { type: "binary" });
+                    let questions = [];
+                    workbook.SheetNames.forEach(sheet => {
+                        let sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+                        for (let i = 0; i < sheetData.length; i += step) {
+                            let question = sheetData[i]["Question"];
+                            let answers = [];
+                            for (let j = 0; j < 4; j++) {
+                                answers.push(sheetData[i + j]["Options"]);
+                            }
+                            questions.push({'question' : question, "options" :answers});
+                        }
+                    });
+                    //console.log(questions);
+                    displayQuestions(questions);
+                    saveAsJSON(questions);
+                };
+            }
+        });
+
+        function displayQuestions(questions) {
+            /*let jsondata = document.getElementById("jsondata");
+            jsondata.innerHTML = JSON.stringify(questions, undefined, 4);*/
+            jsondata.innerHTML = "Successfully uploaded"
+        }
+
+        function saveAsJSON(questions) {
+            // Get exam ID and course ID from the HTML elements
+            let examId = document.getElementById('exam_id').innerText;
+            let courseId = document.getElementById('course_id').innerText;
+            
+            // Get CSRF token
+            let csrfToken = document.getElementById('csrf_token').value;
+            
+            // Send JSON data to backend endpoint using AJAX
+            fetch('/quiz', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify({
+                    exam_id: examId,
+                    course_id: courseId,
+                    json_data: questions,
+                }),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to save JSON data');
+                }
+                return response.json();
+            })
+            .then(result => {
+                // Handle success
+                console.log('JSON data saved successfully:', result);
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error saving JSON data:', error);
+            });
+        }
+        
+    </script>
+</body>
+
+</html>

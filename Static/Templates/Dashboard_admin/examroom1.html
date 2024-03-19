@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Nunito' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Camera Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+        .question-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .progress-box {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ccc;
+            position: fixed;
+            top: 0;
+            right: 0;
+        }
+
+        .completion-message {
+            font-weight: bold;
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .submit-button {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #camera-window {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1); /* Flip horizontally */
+        }
+    </style>
+</head>
+<body>
+    <div id="camera-window">
+        <video id="camera-feed" autoplay playsinline></video>
+    </div>
+    <div class="quiz-container">
+        <div class="progress-box" id="progressBox">
+            Progress: <span id="progress">1</span> / <span id="totalQuestions">5</span>
+        </div>
+    
+        <div class="question-box" id="questionBox1">
+            <h2>Question 1</h2>
+            <p>What is the capital of France?</p>
+            <label>
+                <input type="radio" name="q1" value="paris" onclick="answerQuestion(1)"> Paris
+            </label>
+            <label>
+                <input type="radio" name="q1" value="london" onclick="answerQuestion(1)"> London
+            </label>
+            <label>
+                <input type="radio" name="q1" value="berlin" onclick="answerQuestion(1)"> Berlin
+            </label>
+        </div>
+    
+        <div class="question-box" id="questionBox2">
+            <h2>Question 2</h2>
+            <p>Which planet is known as the Red Planet?</p>
+            <label>
+                <input type="radio" name="q2" value="mars" onclick="answerQuestion(2)"> Mars
+            </label>
+            <label>
+                <input type="radio" name="q2" value="venus" onclick="answerQuestion(2)"> Venus
+            </label>
+            <label>
+                <input type="radio" name="q2" value="jupiter" onclick="answerQuestion(2)"> Jupiter
+            </label>
+        </div>
+    
+        <div class="question-box" id="questionBox3">
+            <h2>Question 3</h2>
+            <p>1+1?</p>
+            <label>
+                <input type="radio" name="q3" value="2" onclick="answerQuestion(3)"> 2
+            </label>
+            <label>
+                <input type="radio" name="q3" value="1" onclick="answerQuestion(3)"> 1
+            </label>
+            <label>
+                <input type="radio" name="q3" value="3" onclick="answerQuestion(3)"> 3
+            </label>
+        </div>
+    
+        <div class="question-box" id="questionBox4">
+            <h2>Question 4</h2>
+            <p>2*3?</p>
+            <label>
+                <input type="radio" name="q4" value="6" onclick="answerQuestion(4)"> 6
+            </label>
+            <label>
+                <input type="radio" name="q4" value="7" onclick="answerQuestion(4)"> 7
+            </label>
+            <label>
+                <input type="radio" name="q4" value="8" onclick="answerQuestion(4)"> 8
+            </label>
+        </div>
+    
+        <div class="question-box" id="questionBox5">
+            <h2>Question 5</h2>
+            <p>Who wrote the play 'Romeo and Juliet'?</p>
+            <label>
+                <input type="radio" name="q5" value="shakespeare" onclick="answerQuestion(5)"> William Shakespeare
+            </label>
+            <label>
+                <input type="radio" name="q5" value="dickens" onclick="answerQuestion(5)"> Charles Dickens
+            </label>
+            <label>
+                <input type="radio" name="q5" value="twain" onclick="answerQuestion(5)"> Mark Twain
+            </label>
+        </div>
+
+        <div class="submit-button" id="submitButton">
+            <button onclick="submitQuiz()">Submit Quiz</button>
+        </div>
+
+        <div class="completion-message center-container" id="completionMessage">
+            Your quiz is done! Thank you.
+            <a href = "{% url 'finish_exam' %}">Back to Exam Menu</a>
+        </div>
+    
+    </div>
+
+    <script>
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then((stream) => {
+                const videoElement = document.getElementById('camera-feed');
+                if ('srcObject' in videoElement) {
+                    videoElement.srcObject = stream;
+                } else {
+                    videoElement.src = window.URL.createObjectURL(stream);
+                }
+            })
+            .catch((error) => {
+                console.error('Error accessing the camera:', error);
+            });
+
+            let currentQuestion = 1;
+    const totalQuestions = 5;
+    let answeredQuestions = [];
+
+    function answerQuestion(questionNumber) {
+        if (!answeredQuestions.includes(questionNumber)) {
+            answeredQuestions.push(questionNumber);
+
+            // Update progress
+            document.getElementById('progress').innerText = answeredQuestions.length;
+
+            // Show next question or finish if all questions are completed
+            const nextQuestionBox = document.getElementById('questionBox' + (questionNumber + 1));
+            if (answeredQuestions.length < totalQuestions) {
+                nextQuestionBox.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                document.getElementById('submitButton').style.display = 'block';
+            }
+        }
+    }
+
+    function submitQuiz() {
+        // Disable radio buttons to lock the answers
+        document.querySelectorAll('input[type="radio"]').forEach(function (element) {
+            element.disabled = true;
+        });
+
+        // Hide progress box
+        document.getElementById('progressBox').style.display = 'none';
+
+        // Show completion message
+        document.getElementById('completionMessage').style.display = 'block';
+
+        // Hide submit button
+        document.getElementById('submitButton').style.display = 'none';
+    }
+    </script>
+</body>
+</html>

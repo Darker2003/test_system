@@ -1,0 +1,87 @@
+body {
+    font-family: "Nunito", sans-serif;
+    margin: 20px;
+}
+
+.exam-card {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.start-exam-button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #488fe5;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.start-exam-button:hover {
+    background-color: #093fb4;
+}
+
+.exam-card {
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.exam-card ul {
+    list-style: none; /* Remove default list styles */
+    padding: 0;
+}
+.exam-card ul li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Adjust the spacing between items */
+}
+
+.exam-card ul li img {
+    margin-right: 30px; /* Adjust the spacing between the image and text */
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #4d82d8;
+    color: white;
+    padding: 10px;
+    text-align: right;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-name {
+    margin-left: 10px; /* Adjust the margin as needed */
+    text-shadow: #555;
+
+}
+
+nav {
+    float: right;
+}
+
+nav a {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    padding: 14px 16px;
+    margin-left: 5px; /* Add margin to separate links */
+}
+
+nav a:hover {
+    background-color: #555;
+}
+
+.dashboard-container {
+    margin: 20px;
+}

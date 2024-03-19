@@ -1,0 +1,100 @@
+<!-- {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Nunito' rel='stylesheet'>
+    <link href="{% static 'css/exam_room.css' %}" rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam_{{exam_id}}</title>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="progress-box" id="progressBox">
+            Progress: <span id="progress">1</span> / <span id="totalQuestions">5</span>
+        </div>
+        <div class="question-box" id="questionBox1">
+            <h2>Question 1</h2>
+            <p>What is the capital of France?</p>
+            <label>
+                <input type="radio" name="q1" value="paris" onclick="answerQuestion(1)"> Paris
+            </label>
+            <label>
+                <input type="radio" name="q1" value="london" onclick="answerQuestion(1)"> London
+            </label>
+            <label>
+                <input type="radio" name="q1" value="berlin" onclick="answerQuestion(1)"> Berlin
+            </label>
+        </div>
+    
+        <div class="question-box" id="questionBox2">
+            <h2>Question 2</h2>
+            <p>Which planet is known as the Red Planet?</p>
+            <label>
+                <input type="radio" name="q2" value="mars" onclick="answerQuestion(2)"> Mars
+            </label>
+            <label>
+                <input type="radio" name="q2" value="venus" onclick="answerQuestion(2)"> Venus
+            </label>
+            <label>
+                <input type="radio" name="q2" value="jupiter" onclick="answerQuestion(2)"> Jupiter
+            </label>
+        </div>
+
+        <div class="submit-button" id="submitButton">
+            <button onclick="submitQuiz()">Submit Quiz</button>
+        </div>
+
+        <div class="completion-message center-container" id="completionMessage">
+            Your quiz is done! Thank you.
+            <a href = "{% url 'home' %}">Back to Home</a>
+        </div>
+    
+    </div>
+    <script src="{% static 'js/exam_room.js' %}"></script>
+</body>
+</html> -->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Nunito' rel='stylesheet'>
+    <link href="{% static 'css/exam_room.css' %}" rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam_{{ exam_id }}</title>
+</head>
+<body>
+    <input type="hidden" id="csrf_token" value="{% csrf_token %}">
+    <div class="quiz-container">
+        <div class="progress-box" id="progressBox">
+            Progress: <span id="progress">1</span> / <span id="totalQuestions">{{number_question}}</span>
+        </div>
+        <div id="exam_id">{{ exam_id }}</div>
+        <!-- Loop through the queryset to display questions and options --> 
+        {% for question_data in json_data.0 %}
+        <div class="question-box" id="questionBox{{ forloop.counter }}">
+            <h3>Question {{ forloop.counter }}</h3>
+            <p>{{ question_data.question }}</p>
+            
+            {% for option in question_data.options %}
+                <label>
+                    <input type="radio" name="q{{ forloop.parentloop.counter }}" value="{{option}}" onclick="answerQuestion({{forloop.parentloop.counter}})">
+                    {{ option }}
+                </label>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <div class="submit-button" id="submitButton">
+            <button onclick="submitQuiz()">Submit Quiz</button>
+        </div>
+        <div class="completion-message center-container" id="completionMessage">
+            Your quiz is done! Thank you.
+            <a href="{% url 'home' %}">Back to Home</a>
+        </div>
+    </div>
+    <script src="{% static 'js/exam_room.js' %}">
+    </script>
+</body>
+</html>

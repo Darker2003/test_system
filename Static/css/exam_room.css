@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.quiz-container {
+    max-width: 600px;
+    margin: auto;
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.question-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.progress-box {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border: 1px solid #ccc;
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+.completion-message {
+    font-weight: bold;
+    margin-top: 20px;
+    display: none;
+    text-align: center;
+}
+
+.submit-button {
+    display: none;
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Add CSS styles for options */
+.question-box label {
+    display: block;
+    margin-bottom: 10px;
+}

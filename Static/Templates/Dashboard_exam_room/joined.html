@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic Table</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/css_login.css' %}">
+
+</head>
+<body>
+   
+   <div class="table-container">
+        <div class="table-wrapper">
+            <h3 class="title">Room Management {{ exam_id }}</h3>
+            <table boder="1" id="joined-exam-room">
+                <thead>
+                    <tr>
+                        <th>History ID</th>
+                        <th>Time</th>
+                        <th>Label</th>
+                        <th>erd_id</th>
+                        <th>User</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Initial data loaded from Django context -->
+                    <tr>
+                        <td>{{ item.his_id }}</td>
+                        <td>{{ item.htime }}</td>
+                        <td>{{ item.labels }}</td>
+                        <td>{{ item.erd_id }}</td>
+                        <td>{{ item.erd_id__username__username }}</td>
+                        <td>{{ item.erd_id__state }}</td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="{% static 'js/joined.js' %}"></script>
+</body>
+</html>
